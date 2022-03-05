@@ -1,0 +1,36 @@
+frameworkVersion: '3'
+service: tia-weshare-2022-03
+
+plugins:
+  - serverless-prune-plugin
+
+provider:
+  name: aws
+  region: eu-west-3
+  tags: # For lambdas
+    foo: bar
+    baz: qux
+  stackTags: # For all resources
+    key: value
+
+custom:    
+  prune:
+    automatic: true
+    includeLayers: true
+    number: 3
+
+package:
+  patterns:
+    - '!./**'
+    - src/**
+    
+functions:
+  salut:
+    handler: src/handler.main
+    runtime: python3.9
+    events:
+      - httpApi:
+          method: GET
+          path: /
+
+
