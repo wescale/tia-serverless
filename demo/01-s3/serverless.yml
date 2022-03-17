@@ -1,0 +1,73 @@
+frameworkVersion: '3'
+service: tia-serverless-s3
+
+plugins:
+  - serverless-prune-plugin
+  - serverless-python-requirements
+
+provider:
+  # General settings
+  name: aws
+  stage: ${opt:stage}
+  region: ${env:AWS_REGION}
+  tags:
+    foo: bar
+    baz: qux
+  stackTags:
+    key: value
+  # General function settings
+  runtime: python3.8
+  memorySize: 128
+  timeout: 10
+  environment:
+    LOG_LEVEL: INFO
+  logRetentionInDays: 14
+  # IAM permissions
+  iam:
+    role:
+      statements:
+        - Effect: "Allow"
+          Action:
+            - "s3:ListAllMyBuckets"
+          Resource:
+            - "arn:aws:s3:::*"
+
+custom:
+  pythonRequirements:
+    slim: true
+  prune:
+    automatic: true
+    includeLayers: true
+    number: 3
+
+package:
+  patterns:
+    - '!./**'
+    - src/**
+    - requirements.txt
+
+resources:
+  Resources:
+    UploadBucket:
+      Type: AWS::S3::Bucket
+      Properties: 
+        BucketName: ${self:service}-${sls:stage}
+        AccessControl: Private
+        PublicAccessBlockConfiguration: 
+          BlockPublicAcls: True
+          BlockPublicPolicy: True
+          IgnorePublicAcls: True
+          RestrictPublicBuckets: True
+        VersioningConfiguration: 
+          Status: Enabled
+
+functions:
+  on-file-created:
+    handler: src/handler.on_file_created
+    description: Handle uploaded files
+    timeout: 15
+    events:
+      - s3:
+          bucket: !Ref UploadBucket
+          existing: true
+          event: s3:ObjectCreated:*

@@ -1,12 +1,12 @@
 frameworkVersion: '3'
-service: tia-weshare-2022-03
+service: tia-serverless-api
 
 plugins:
   - serverless-prune-plugin
 
 provider:
   name: aws
-  region: eu-west-3
+  region: ${env:AWS_REGION}
   tags: # For lambdas
     foo: bar
     baz: qux
@@ -27,10 +27,8 @@ package:
 functions:
   salut:
     handler: src/handler.main
-    runtime: python3.9
+    runtime: python3.8
     events:
       - httpApi:
           method: GET
           path: /
-
-

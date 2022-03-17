@@ -1,0 +1,11 @@
+{
+  "name": "tia-serverless",
+  "version": "1.0.0",
+  "description": "",
+  "author": "Tools In Action Serverless",
+  "devDependencies": {
+    "serverless": "3.7.1",
+    "serverless-prune-plugin": "2.0.1",
+    "serverless-python-requirements": "^5.3.1"
+  }
+}
