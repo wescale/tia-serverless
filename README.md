@@ -23,3 +23,15 @@ $ python -m venv .venv
 $ source .venv/bin/activate
 $ python --version
 ```
+
+# Deploy demo
+
+Deploy S3 demo :
+```
+$ make s3-deploy
+```
+
+Deploy API demo :
+```
+$ make api-deploy
+```
