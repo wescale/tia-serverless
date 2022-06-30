@@ -31,6 +31,13 @@ provider:
             - "s3:ListAllMyBuckets"
           Resource:
             - "arn:aws:s3:::*"
+        - Effect: "Allow"
+          Action:
+            - "s3:GetObject"
+          Resource:
+            - !Sub
+              - "${BucketArn}/*"
+              - BucketArn: !GetAtt UploadBucket.Arn
 
 custom:
   pythonRequirements:
